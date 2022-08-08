@@ -1,17 +1,16 @@
-from cProfile import label
 from cgitb import text
-from email.mime import application
 from tkinter import *
 from time import strftime
+from tkinter.ttk import Notebook
 # ------------------constant_variable-&-Database-------
 Exam_name = "Exam Name"
 # applicant_detail is in form of list that contain [application no,applicant name,photo,Exam_name,[*[subject,questionno,ans]]]
 applicant_detail = ['20221089',"Guruprasath.M.R",r"./nullphtid.png",Exam_name,[]]
-#  Database is dict and  in form of {**subjectname:[*question ,*[*choices]]}
+#  Database is dict and  in form of {**subjectname:[Frame,[*question ,*[*choices]],Frame(qno frame),[Frame(q frame),*qno_buttons(current_postion),1]]}
 Database={
-    "Physcis":[Frame,[],[],[],[],[],[],[]],
-    "Maths":[Frame,[],[],[],[],[],[],[]],
-    "Chemistry":[Frame,[],[],[],[],[],[],[]],
+    "Physcis":[Frame,["1+2=","3","4","5","6"],["1+2=","3","4","5","6"],["1+2=","3","4","5","6"],["1+2=","3","4","5","6"],["1+2=","3","4","5","6"],["1+2=","3","4","5","6"],["1+2=","3","4","5","6"],Frame,[Frame]],
+    "Maths":[Frame,[],[],[],[],[],[],[],Frame,[Frame]],
+    "Chemistry":[Frame,[],[],[],[],[],[],[],Frame,[Frame]],
 }
 # ------------------------------------------
 # ------------------function----------------
@@ -49,6 +48,36 @@ Label(detail_frame,image=phtid).pack(anchor="e")
 # --------------------------------------------
 # ------------second_frame--------------------
 # second frame contain tab that contain subject and that contain question number and question ans
-
+# Second frame contain a notebook  
+#  (env-> Win,ext->Frame)
+second_frame = Frame(Win)
+second_frame.pack(fill=X)
+second_frame_Notebook = Notebook(second_frame)
+second_frame_Notebook.pack(fill=BOTH)
+# Creating tabs
+for a in Database:
+    print(a)
+    print(Database[a])
+    print(Database[a][0])
+    Database[a][0]=Database[a][0](second_frame_Notebook)
+    Database[a][0].pack()
+    second_frame_Notebook.add(Database[a][0],text=a)
+    no_of_question_len = len(Database[a]) - 3 #-3 because of 3 frame
+    for i in range(no_of_question_len):
+        Database[a][-1].append(Button)
+    Database[a][-1].append(1)
+    print(Database[a][-1])
+# creating qnos 
+for a in Database:
+    print(a)
+    print(Database[a])
+    no_of_question_len = len(Database[a]) - 3 #-3 because of 3 frame
+    print(no_of_question_len)
+    Database[a][-1][0] = Database[a][-1][0](Database[a][0])
+    Database[a][-1][0].pack(side=LEFT) # question nos tab frame
+    # qnosf is Database[a][-1][0]
+    for ax in range(1,no_of_question_len+1):
+        Database[a][-1][ax] = Database[a][-1][ax](Database[a][-1][0],text=str(ax))
+        Database[a][-1][ax].pack()
 # --------------------------------------------
 Win.mainloop()
