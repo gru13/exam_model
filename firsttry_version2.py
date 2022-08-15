@@ -1,4 +1,5 @@
 from cgitb import text
+from secrets import choice
 from tkinter import *
 from time import strftime
 from tkinter.ttk import Notebook
@@ -18,8 +19,16 @@ def cur_time(x:Label):
     x.config(text=strftime('%I:%M:%S %p'))
     x.after(1000,lambda :cur_time(x))
 def qnos_command(cur_pos,subject,qno):
-    print(cur_pos,subject,qno)
-
+    # print(cur_pos,subject,qno)
+    display_q(Win,subject,qno)
+def display_q(frame,subject,qno):
+    # Label(frame,text="ASDFGHJKL;").pack()
+    Question = Database[subject][qno][0]
+    Choices = Database[subject][qno][1:]
+    selected_Choice = StringVar(frame)
+    Label(frame,text=str(qno)+") "+Question).pack()
+    for a in Choices:
+        Radiobutton(frame,text=a,value=a,variable=selected_Choice).pack()
 # ------------------------------------------
 # ------------------main_code---------------
 #  (env-> global,ext->Tk{main window})
@@ -80,7 +89,7 @@ for a in Database:
     Database[a][-1][0].pack(side=LEFT) # question nos tab frame
     # qnosf is Database[a][-1][0]
     for ax in range(1,no_of_question_len+1):
-        q = Database[a][-1][ax](Database[a][-1][0],text=str(ax),command=lambda q= [Database[a][-1][-1],a,ax]:qnos_command(q[0],q[1],q[2]))
+        q = Database[a][-1][ax](Database[a][-1][0],text=str(ax),command=lambda q = [Database[a][-1][-1],a,ax]:qnos_command(q[0],q[1],q[2]))
         Database[a][-1][ax] = q 
     # align of qnos
     # print(Database[a])
@@ -99,10 +108,9 @@ for a in Database:
         # print(remain)
         for ad in range(remain):
             l_contain_b_index.append([int((no_of_question_len-remain)/3),ad])
-    print(l_contain_b_index)
+    # print(l_contain_b_index)
     for ad in range(1,len(l_contain_b_index)+1):
         Database[a][-1][ad].grid(row=l_contain_b_index[ad-1][0],column=l_contain_b_index[ad-1][1])
-
 # --------------------------------------------
-Win.mainloop()
+# Win.mainloop()
 #----------------------------------------------------------
